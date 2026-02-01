@@ -10,8 +10,6 @@ const itemPrices = {
     "Tender coconut": 150,
     "Kulfi": 150,
     "Cotton candy": 150,
-    "Caramel Latte": 150,
-    "Spanish delight": 150,
     "Black currant": 140,
     "Butter scotch": 120,
     "Chocolate (Ice Cream)": 120,
@@ -22,9 +20,9 @@ const itemPrices = {
 
     // Milkshakes
     "Cold coffee shake": 150,
-    "Oreo shake": 160,
-    "Boost shake": 160,
-    "Blackcurrant shake": 160,
+    "Oreo shake": 150,
+    "Boost shake": 150,
+    "Blackcurrant shake": 150,
     "Butterscotch shake": 150,
     "Chocolate (Shake)": 150,
     "Pista shake": 150,
@@ -32,53 +30,24 @@ const itemPrices = {
     "Strawberry (Shake)": 120,
     "Vannila (Shake)": 120,
 
-    // Mini falooda
-    "Mini falooda - Fruits": 120,
-    "Mini falooda - Vannila": 120,
-    "Mini falooda - Strawberry": 120,
-
-    // Simplified category entries (single-button variants)
-    "Mini falooda - 120": 120,
-    "Special mini falooda - 150": 150,
-    "Chocolate falooda - 180": 180,
-    "Special fruit falooda - 180": 180,
-    "Hot choco brownie sundae - 199": 199,
-
-    // Special mini falooda
-    "Special mini falooda - Fruits": 150,
-    "Special mini falooda - Strawberry": 150,
-    "Special mini falooda - Mango": 150,
-    "Special mini falooda - Nuts": 150,
-
-    // Chocolate falooda
-    "Chocolate falooda - Choco brownie": 180,
-    "Chocolate falooda - Chocolate": 180,
-    "Chocolate falooda - Vannila": 180,
-
-    // Special fruit falooda
-    "Special fruit falooda - Fruits": 180,
-    "Special fruit falooda - Strawberry": 180,
-    "Special fruit falooda - Mango": 180,
-    "Special fruit falooda - Pista": 180,
-    "Special fruit falooda - Butterscotch": 180,
-    "Special fruit falooda - Nuts": 180,
+    // Falooda
+    "Mini falooda": 120,
+    "Dry fruit falooda":200,
+    "Chocolate falooda": 180,
+    "Special fruit falooda": 180,
 
     // Brownie with
+    "Brownie": 100,
     "Brownie with Vannila": 120,
     "Brownie with Butterscotch": 140,
     "Brownie with Chocolate": 150,
 
     // Hot choco brownie sundae
-    "Hot choco brownie - Hot chocolate": 199,
-    "Hot choco brownie - Brownie": 199,
-    "Hot choco brownie - Chocolate": 199,
-    "Hot choco brownie - Vannila": 199,
-    "Hot choco brownie - Nuts": 199,
+    "Hot choco brownie sundae": 199,
 
     // Special
     "Puttu ice cream": 299,
     "Titanic icecream": 299,
-    "Gulab jamun ice cream": 199,
     "Rainbow ice cream": 299,
     "Dry fruit sundae": 199,
 
@@ -103,22 +72,29 @@ const itemPrices = {
     // Starters
     "French fries": 110,
     "Smiley": 110,
-    "Veg nuggets": 110,
-    "Veg momo": 120,
+    "Veg nuggets": 120,
     "Chicken nuggets": 150,
+
+    // Momos
+    "Veg momo": 120,
     "Chicken momo": 140,
+    "Korean spicy veg momos": 150,
+    "Korean spicy chicken momos": 170,
 
     // Mocktail
     "Ice blue": 100,
     "Lemon mint": 100,
     "Strawberry mocktail": 100,
-    "Watermelon": 100
-    // ensure keys matching button labels
-    ,"Hot choco brownie sundae": 199,
-    "Mini falooda": 120,
-    "Special mini falooda": 150,
-    "Chocolate falooda": 180,
-    "Special fruit falooda": 180
+    "Watermelon": 100,
+
+    // Ice cream sandwich
+    "Rainbow Ice cream sandwich": 199,
+    "chocolate Ice cream sandwich": 199,
+
+    // Korean Chicken
+    "Korean Boneless chicken": 249,
+    "Korean Chicken wings":249,
+    "Korean Chicken Lollipop": 249
 };
 
 const cart = {};
