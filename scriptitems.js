@@ -95,7 +95,14 @@ const itemPrices = {
     "Korean Boneless chicken": 249,
     "Korean Chicken wings":249,
     "Korean Chicken Lollipop": 249,
-    "Mayonnaise":10
+    "Mayonnaise":10,
+
+    //Combo Section
+    "Combo 199":199,
+    "Combo 299":299,
+    "Combo 399":399,
+    "Combo 499":499
+    
 };
 
 const cart = {};
