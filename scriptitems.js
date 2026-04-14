@@ -5,104 +5,110 @@ document.getElementById('seatNumber').textContent = seatNumber;
 
 // Item prices dictionary (updated menu)
 const itemPrices = {
-    // Ice cream scoops
-    "Red velvet": 150,
-    "Tender coconut": 150,
-    "Kulfi": 150,
-    "Cotton candy": 150,
-    "Black currant": 140,
-    "Butter scotch": 120,
-    "Chocolate (Ice Cream)": 120,
-    "Pista": 120,
-    "Mango (Ice Cream)": 120,
-    "Strawberry (Ice Cream)": 90,
-    "Vannila (Ice Cream)": 90,
 
-    // Milkshakes
-    "Cold coffee shake": 150,
-    "Oreo shake": 150,
-    "Boost shake": 150,
-    "Blackcurrant shake": 150,
-    "Butterscotch shake": 150,
-    "Chocolate (Shake)": 150,
-    "Pista shake": 150,
-    "Mango (Shake)": 150,
-    "Strawberry (Shake)": 120,
-    "Vannila (Shake)": 120,
-
-    // Falooda
-    "Mini falooda": 120,
-    "Dry fruit falooda":200,
-    "Chocolate falooda": 180,
-    "Special fruit falooda": 180,
-
-    // Brownie with
-    "Brownie": 100,
-    "Brownie with Vannila": 120,
-    "Brownie with Butterscotch": 140,
-    "Brownie with Chocolate": 150,
-
-    // Hot choco brownie sundae
-    "Hot choco brownie sundae": 199,
-
-    // Special
-    "Puttu ice cream": 299,
-    "Titanic icecream": 299,
-    "Rainbow ice cream": 299,
-    "Dry fruit sundae": 199,
-
-    // Burgers
-    "Veg burger": 150,
-    "Chicken burger": 150,
-    "Fried chicken burger": 200,
+    // Burger
+    "Veg Burger": 130,
+    "Veg Cheesy Burger": 150,
+    "Korean Veg Burger": 180,
+    "Chicken Burger": 150,
+    "Chicken Cheesy Burger": 150,
+    "Korean Chicken Burger": 180,
 
     // Sandwich
-    "Veg sandwich": 150,
-    "Chicken sandwich": 150,
-    "Peri peri chicken sandwich": 180,
+    "Classic Veg Sandwich": 150,
+    "Veg Cheese Sandwich": 160,
+    "Chicken Sandwich": 150,
+    "Chicken Cheese Sandwich": 160,
+    "Peri Peri Chicken Sandwich": 180,
+    "Chicken Stuff Sandwich": 200,
 
-    // Chicken
-    "Fried chicken": 200,
-    "Chicken strips": 200,
-    "Chicken loaded": 200,
-    "Chicken wings": 200,
-    "Chicken lollipop": 200,
-    "Chicken popcorn": 200,
+    // Roll
+    "Moonlight Special Chicken Roll": 200,
+    "Spicy Chicken Roll": 180,
+    "Chicken Cheese Roll": 160,
+    "Garlic Chicken Roll": 160,
+    "Classic Chicken Roll": 150,
 
     // Starters
-    "French fries": 110,
-    "Smiley": 110,
-    "Veg nuggets": 120,
-    "Chicken nuggets": 150,
+    "French Fries": 110,
+    "Veg Nuggets": 120,
+    "Veg Momos": 120,
+    "Smiley": 100,
+    "Chicken Nuggets": 150,
+    "Chicken Momos": 140,
 
-    // Momos
-    "Veg momo": 120,
-    "Chicken momo": 140,
-    "Korean spicy veg momos": 150,
-    "Korean spicy chicken momos": 170,
-
-    // Mocktail
-    "Ice blue": 100,
-    "Lemon mint": 100,
-    "Strawberry mocktail": 100,
+    // Mojito
+    "Ice Blue": 100,
+    "Lemon": 100,
+    "Strawberry": 100,
     "Watermelon": 100,
 
-    // Ice cream sandwich
-    "Rainbow Ice cream sandwich": 199,
-    "chocolate Ice cream sandwich": 199,
+    // Korean Dishes
+    "Korean Boneless Chicken": 249,
+    "Korean Chicken Momo": 170,
+    "Korean Veg Momo": 150,
+    "Chicken Loaded Fries": 200,
+    "Chicken Popcorn": 200,
 
-    // Korean Chicken
-    "Korean Boneless chicken": 249,
-    "Korean Chicken wings":249,
-    "Korean Chicken Lollipop": 249,
-    "Mayonnaise":10,
+    // Ice Cream Sandwiches
+    "Rainbow Ice Cream Sandwich": 199,
+    "Choco Ice Cream Sandwich": 199,
+    "Oreo Fantasy Sandwich": 199,
+    "Strawberry Cream Sandwich": 199,
+    "Mango Cream Sandwich": 199,
 
-    //Combo Section
-    "Combo 199":199,
-    "Combo 299":299,
-    "Combo 399":399,
-    "Combo 499":499
-    
+    // Special Ice Creams
+    "Puttu Ice Cream": 299,
+    "Titanic Ice Cream": 299,
+    "Rainbow Ice Cream": 299,
+    "Hot Choco Brownie": 199,
+
+    // Ice Cream
+    "Red Velvet": 150,
+    "Tender Coconut": 150,
+    "Kulfi": 150,
+    "Blackcurrant": 120,
+    "Pista": 120,
+    "Chocolate": 120,
+    "Butterscotch": 120,
+    "Mango": 120,
+    "Strawberry": 90,
+    "Vanilla": 90,
+
+    // Milkshake
+    "Oreo Shake": 170,
+    "Cold Coffee": 150,
+    "Boost Shake": 150,
+    "Red Velvet Shake": 180,
+    "Tender Coconut Shake": 180,
+    "Kulfi Shake": 180,
+    "Blackcurrant Shake": 150,
+    "Pista Shake": 150,
+    "Butterscotch Shake": 150,
+    "Chocolate Shake": 150,
+    "Mango Shake": 150,
+    "Strawberry Shake": 120,
+    "Vanilla Shake": 120,
+
+    // Brownie
+    "Sizzling Brownie": 170,
+    "Brownie with Chocolate": 150,
+    "Brownie with Butterscotch": 140,
+    "Brownie with Vanilla": 120,
+
+    // Choco Lava
+    "Chocolava with Chocolate": 150,
+    "Chocolava with Butterscotch": 140,
+    "Chocolava with Vanilla": 130,
+
+    // Falooda
+    "Moonlight Falooda": 250,
+    "Dry Fruit Falooda": 200,
+    "Chocolate Falooda": 180,
+    "Fruit Falooda": 180,
+    "Lassi Falooda": 150,
+    "Mini Falooda": 120,
+    "Choco Man": 200
 };
 
 const cart = {};
