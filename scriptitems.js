@@ -40,7 +40,7 @@ const itemPrices = {
     // Mojito
     "Ice Blue": 100,
     "Lemon": 100,
-    "Strawberry": 100,
+    "Strawberry Mojito": 100,
     "Watermelon": 100,
 
     // Korean Dishes
