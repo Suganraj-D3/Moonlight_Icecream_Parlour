@@ -91,22 +91,22 @@
                 pre.textContent = txn.items.map(i => `${i.name} x ${i.qty} = ₹${i.total}`).join('\n');
                 node.appendChild(pre);
                 // add delete button for this transaction
-                const del = document.createElement('button');
-                del.className = 'button-18';
-                del.style.marginTop = '8px';
-                del.textContent = 'Delete Transaction';
-                del.addEventListener('click', () => {
-                    if (!confirm('Delete this transaction? This cannot be undone.')) return;
-                    try {
-                        const stored = JSON.parse(localStorage.getItem(key) || '[]');
-                        const filtered = stored.filter(s => String(s.timestamp) !== String(txn.timestamp));
-                        localStorage.setItem(key, JSON.stringify(filtered));
-                    } catch (e) {
-                        // ignore parse error
-                    }
-                    render();
-                });
-                node.appendChild(del);
+                // const del = document.createElement('button');
+                // del.className = 'button-18';
+                // del.style.marginTop = '8px';
+                // del.textContent = 'Delete Transaction';
+                // del.addEventListener('click', () => {
+                //     if (!confirm('Delete this transaction? This cannot be undone.')) return;
+                //     try {
+                //         const stored = JSON.parse(localStorage.getItem(key) || '[]');
+                //         const filtered = stored.filter(s => String(s.timestamp) !== String(txn.timestamp));
+                //         localStorage.setItem(key, JSON.stringify(filtered));
+                //     } catch (e) {
+                //         // ignore parse error
+                //     }
+                //     render();
+                // });
+                // node.appendChild(del);
                 listEl.appendChild(node);
             });
         }
