@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -6,19 +6,30 @@
     <title>Moon Light Ice Cream Parlor</title>
     <link rel="stylesheet" href="styleitems.css">
     <style>
-        /* Only override colors on this page. Shared nav animation/position lives in styleitems.css */
-        body { background-color: #2E2E2E; color: #EFEFEF; }
-        .top-bar { background-color: #3D3D3D; color: #FFF; }
         .title { font-size:24px; margin:0; flex:1; text-align:center; }
-        .main-wrapper { width:90%; max-width:980px; margin:24px auto; padding-top:10px; }
-        .seat-selection { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:18px; }
-        .seat { background:rgb(57, 101, 213); 
-            color:#fff; height:110px; border-radius:8px; 
-            display:flex; align-items:center; 
-            justify-content:center;
-            font-size:18px; cursor:pointer;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-         }
+        .main-wrapper { width:90%; max-width:980px; margin:40px auto; padding-top:10px; }
+        .seat-selection { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:18px; }
+        .seat { 
+            background: rgba(255, 255, 255, 0.04); 
+            color: #FFF; 
+            height: 110px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border-color);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 18px; 
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+        }
+        .seat:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 8px 24px rgba(166, 120, 93, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -30,8 +41,7 @@
 
     <div class="drawer" id="drawer">
         <a href="index.html">Home</a>
-        <a href="salesSummary.html">Sales Summary</a>
-        <a href="about.html">About Us</a>
+        <a href="admin.html">Admin Panel</a>
     </div>
 
     <div class="main-wrapper">

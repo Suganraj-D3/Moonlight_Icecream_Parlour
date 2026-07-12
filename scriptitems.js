@@ -1,115 +1,17 @@
-﻿// Get seat number from URL and display it
+// Get seat number from URL and display it
 const urlParams = new URLSearchParams(window.location.search);
 const seatNumber = urlParams.get('seat');
 document.getElementById('seatNumber').textContent = seatNumber;
 
-// Item prices dictionary (updated menu)
-const itemPrices = {
-
-    // Burger
-    "Veg Burger": 130,
-    "Veg Cheesy Burger": 150,
-    "Korean Veg Burger": 180,
-    "Chicken Burger": 150,
-    "Chicken Cheesy Burger": 150,
-    "Korean Chicken Burger": 180,
-
-    // Sandwich
-    "Classic Veg Sandwich": 150,
-    "Veg Cheese Sandwich": 160,
-    "Chicken Sandwich": 150,
-    "Chicken Cheese Sandwich": 160,
-    "Peri Peri Chicken Sandwich": 180,
-    "Chicken Stuff Sandwich": 200,
-
-    // Roll
-    "Moonlight Special Chicken Roll": 200,
-    "Spicy Chicken Roll": 180,
-    "Chicken Cheese Roll": 160,
-    "Garlic Chicken Roll": 160,
-    "Classic Chicken Roll": 150,
-
-    // Starters
-    "French Fries": 110,
-    "Veg Nuggets": 120,
-    "Veg Momos": 120,
-    "Smiley": 100,
-    "Chicken Nuggets": 150,
-    "Chicken Momos": 140,
-
-    // Mojito
-    "Ice Blue": 100,
-    "Lemon": 100,
-    "Strawberry Mojito": 100,
-    "Watermelon": 100,
-
-    // Korean Dishes
-    "Korean Boneless Chicken": 249,
-    "Korean Chicken Momo": 170,
-    "Korean Veg Momo": 150,
-    "Chicken Loaded Fries": 200,
-    "Chicken Popcorn": 200,
-
-    // Ice Cream Sandwiches
-    "Rainbow Ice Cream Sandwich": 199,
-    "Choco Ice Cream Sandwich": 199,
-    "Oreo Fantasy Sandwich": 199,
-    "Strawberry Cream Sandwich": 199,
-    "Mango Cream Sandwich": 199,
-
-    // Special Ice Creams
-    "Puttu Ice Cream": 299,
-    "Titanic Ice Cream": 299,
-    "Rainbow Ice Cream": 299,
-    "Hot Choco Brownie": 199,
-
-    // Ice Cream
-    "Red Velvet": 150,
-    "Tender Coconut": 150,
-    "Kulfi": 150,
-    "Blackcurrant": 120,
-    "Pista": 120,
-    "Chocolate": 120,
-    "Butterscotch": 120,
-    "Mango": 120,
-    "Strawberry": 90,
-    "Vanilla": 90,
-
-    // Milkshake
-    "Oreo Shake": 170,
-    "Cold Coffee": 150,
-    "Boost Shake": 150,
-    "Red Velvet Shake": 180,
-    "Tender Coconut Shake": 180,
-    "Kulfi Shake": 180,
-    "Blackcurrant Shake": 150,
-    "Pista Shake": 150,
-    "Butterscotch Shake": 150,
-    "Chocolate Shake": 150,
-    "Mango Shake": 150,
-    "Strawberry Shake": 120,
-    "Vanilla Shake": 120,
-
-    // Brownie
-    "Sizzling Brownie": 170,
-    "Brownie with Chocolate": 150,
-    "Brownie with Butterscotch": 140,
-    "Brownie with Vanilla": 120,
-
-    // Choco Lava
-    "Chocolava with Chocolate": 150,
-    "Chocolava with Butterscotch": 140,
-    "Chocolava with Vanilla": 130,
-
-    // Falooda
-    "Moonlight Falooda": 250,
-    "Dry Fruit Falooda": 200,
-    "Chocolate Falooda": 180,
-    "Fruit Falooda": 180,
-    "Lassi Falooda": 150,
-    "Mini Falooda": 120,
-    "Choco Man": 200
-};
+// Item prices dictionary (populated dynamically from menuData)
+const itemPrices = {};
+if (typeof menuData !== 'undefined' && menuData.sections) {
+    menuData.sections.forEach(sec => {
+        sec.items.forEach(item => {
+            itemPrices[item.name] = item.price;
+        });
+    });
+}
 
 const cart = {};
 
@@ -130,7 +32,7 @@ function formatLine(left, right = '', width = THERMAL_WIDTH) {
 
 function buildKOTText(items) {
     let out = '';
-    out += `KOT - ${SHOP_INFO.name}\n`;
+    out += `KOT - ${SHOP_INFO.name.trim()}\n`;
     out += `Table: ${seatNumber || ''}\n`;
     out += `------------------------------\n`;
     items.forEach(i => {
@@ -229,17 +131,40 @@ function ensureQzConnected(timeout = 5000) {
     });
 }
 
+// Render menu from menuData dynamically
+function renderMenu() {
+    const box1 = document.querySelector('.box1');
+    if (!box1 || typeof menuData === 'undefined' || !menuData.sections) return;
+    box1.innerHTML = '';
+    menuData.sections.forEach(section => {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'totalitems';
+        
+        const h5 = document.createElement('h5');
+        h5.textContent = section.name;
+        catDiv.appendChild(h5);
+        
+        const subitemsDiv = document.createElement('div');
+        subitemsDiv.className = 'subitems';
+        
+        section.items.forEach(item => {
+            const btn = document.createElement('button');
+            btn.textContent = item.name;
+            btn.addEventListener('click', () => {
+                addToCart(item.name);
+            });
+            subitemsDiv.appendChild(btn);
+        });
+        
+        catDiv.appendChild(subitemsDiv);
+        box1.appendChild(catDiv);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    renderMenu();
     loadCartFromStorage();
     updateCart();
-
-    // Add item to cart on click
-    document.querySelectorAll('.subitems button').forEach(button => {
-        button.addEventListener('click', () => {
-            const itemName = button.textContent.trim();
-            addToCart(itemName);
-        });
-    });
 
     // Save cart
     document.getElementById("saveBtn")?.addEventListener("click", () => {
@@ -247,9 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Cart saved successfully!");
     });
 
-    // Go back
-    document.getElementById("goBackBtn")?.addEventListener("click", () => {
-        window.history.back();
+    // Go Home
+    document.getElementById("goHomeBtn")?.addEventListener("click", () => {
+        window.location.href = "index.html";
     });
 
     // Delete all
@@ -266,6 +191,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Print Bill
     document.getElementById("printBtn")?.addEventListener("click", printBill);
+
+    // Move Table
+    document.getElementById("moveTableBtn")?.addEventListener("click", moveTable);
 
     // Global search (filters categories and subitems)
     const globalSearch = document.getElementById('globalSearch');
@@ -395,7 +323,7 @@ function openPrintWindow(items, total) {
 }
 
 // Show an inline modal preview when popups are blocked
-function showInlinePreview(items, total, dateStr, timeStr) {
+function showInlinePreview(items, total, dateStr, timeStr, isKOT = false) {
     // remove existing preview if present
     const existing = document.getElementById('inline-print-preview');
     if (existing) existing.remove();
@@ -421,7 +349,7 @@ function showInlinePreview(items, total, dateStr, timeStr) {
     panel.style.borderRadius = '8px';
 
     const title = document.createElement('h1');
-    title.textContent = SHOP_INFO.name;
+    title.textContent = isKOT ? `KOT - ${SHOP_INFO.name.trim()}` : SHOP_INFO.name;
     title.style.textAlign = 'center';
     title.style.margin = '0 0 4px';
     title.className = 'non-print';
@@ -441,18 +369,29 @@ function showInlinePreview(items, total, dateStr, timeStr) {
     table.style.width = '100%';
     table.style.borderCollapse = 'collapse';
     const thead = document.createElement('thead');
-    thead.innerHTML = '<tr><th style="text-align:left;padding:8px">Items</th><th style="text-align:right;padding:8px">Count</th><th style="text-align:right;padding:8px">Price</th></tr>';
+    if (isKOT) {
+        thead.innerHTML = '<tr><th style="text-align:left;padding:8px">Items</th><th style="text-align:right;padding:8px">Count</th></tr>';
+    } else {
+        thead.innerHTML = '<tr><th style="text-align:left;padding:8px">Items</th><th style="text-align:right;padding:8px">Count</th><th style="text-align:right;padding:8px">Price</th></tr>';
+    }
     table.appendChild(thead);
     const tbody = document.createElement('tbody');
     items.forEach(it => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td style="padding:8px">${it.name}</td><td style="padding:8px;text-align:right">${it.qty}</td><td style="padding:8px;text-align:right">₹${it.total}</td>`;
+        if (isKOT) {
+            tr.innerHTML = `<td style="padding:8px">${it.name}</td><td style="padding:8px;text-align:right">${it.qty}</td>`;
+        } else {
+            tr.innerHTML = `<td style="padding:8px">${it.name}</td><td style="padding:8px;text-align:right">${it.qty}</td><td style="padding:8px;text-align:right">₹${it.total}</td>`;
+        }
         tbody.appendChild(tr);
     });
     table.appendChild(tbody);
-    const tfoot = document.createElement('tfoot');
-    tfoot.innerHTML = `<tr><th colspan="2" style="padding:8px;text-align:left">TOTAL</th><th style="padding:8px;text-align:right">₹${total}</th></tr>`;
-    table.appendChild(tfoot);
+    
+    if (!isKOT) {
+        const tfoot = document.createElement('tfoot');
+        tfoot.innerHTML = `<tr><th colspan="2" style="padding:8px;text-align:left">TOTAL</th><th style="padding:8px;text-align:right">₹${total}</th></tr>`;
+        table.appendChild(tfoot);
+    }
     panel.appendChild(table);
     table.className = 'non-print';
 
@@ -464,7 +403,7 @@ function showInlinePreview(items, total, dateStr, timeStr) {
     printPre.style.fontFamily = 'monospace';
     printPre.style.fontSize = '10px';
     // populate with thermal text
-    printPre.textContent = buildBillText(items, total);
+    printPre.textContent = isKOT ? buildKOTText(items) : buildBillText(items, total);
     panel.appendChild(printPre);
 
     const btns = document.createElement('div');
@@ -483,21 +422,18 @@ function showInlinePreview(items, total, dateStr, timeStr) {
             return;
         }
         const doc = printWin.document;
-        doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>Bill</title><style>
+        doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>${isKOT ? 'KOT' : 'Bill'}</title><style>
             @page { size: 58mm auto; margin: 4mm; }
             html,body{margin:0;padding:0;font-family:monospace;color:#000}
             .wrapper{padding:6px;font-size:12px}
             pre{white-space:pre;font-family:monospace;font-size:11px}
         </style></head><body><div class="wrapper">`);
-        // header and datetime are produced by buildBillText inside the <pre>
-        // use buildBillText to create a thermal-friendly preformatted receipt
-        const thermal = buildBillText(items, total);
+        const thermal = isKOT ? buildKOTText(items) : buildBillText(items, total);
         doc.write('<pre>' + thermal + '</pre>');
         doc.write('</div></body></html>');
         doc.close();
         printWin.focus();
         try { printWin.print(); } catch (e) { console.warn('Print failed', e); }
-        // Do not auto-close the print window — closing too early can cancel the print job.
     };
     const closeBtn = document.createElement('button');
     closeBtn.textContent = 'Close';
@@ -552,27 +488,47 @@ function showInlinePreview(items, total, dateStr, timeStr) {
     document.body.appendChild(overlay);
 }
 
-// Simulated KOT print (can be replaced with QZ Tray logic)
+// Open a printable HTML window for KOT
+function openKOTPrintWindow(items) {
+    const w = window.open('', '', 'width=600,height=800');
+    if (!w) {
+        // Popup blocked — fall back to inline preview
+        showInlinePreview(items, '', new Date().toLocaleDateString(), new Date().toLocaleTimeString(), true);
+        return null;
+    }
+    const doc = w.document;
+    doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>KOT</title><style>
+        @page { size: 58mm auto; margin: 4mm; }
+        html,body{margin:0;padding:0;font-family:monospace; color:#000;}
+        .wrapper{padding:6px; font-size:12px;}
+        pre{font-family:monospace; white-space:pre; font-size:11px;}
+    </style></head><body>`);
+    doc.write(`<div class="wrapper">`);
+    const thermal = buildKOTText(items);
+    doc.write('<pre>' + thermal + '</pre>');
+    doc.write('</div></body></html>');
+    doc.close();
+    w.focus();
+    try { w.print(); } catch (e) { console.warn('KOT print failed', e); }
+    return w;
+}
+
+// Function to print KOT
 function printKOT() {
     disableButtons(true);
     const items = Object.keys(cart).map(name => ({ name, qty: cart[name] }));
-    const kotText = buildKOTText(items);
-
-    // Use browser print flow (popup) — if popup blocked show inline preview
-    const w = window.open('', '', 'width=400,height=600');
-    if (w) {
-        const pre = w.document.createElement('pre');
-        pre.textContent = kotText;
-        w.document.body.appendChild(pre);
-        try { w.print(); } catch (e) { console.warn('KOT print failed', e); }
-        try { w.close(); } catch (e) { /* ignore */ }
+    
+    if (items.length === 0) {
+        alert('No items in cart to print KOT.');
         disableButtons(false);
         return;
     }
 
-    // Popup blocked — reuse inline preview to show KOT items
-    const mapped = items.map(i => ({ name: i.name, qty: i.qty, total: '' }));
-    showInlinePreview(mapped, '', new Date().toLocaleDateString(), new Date().toLocaleTimeString());
+    // Open KOT print window
+    const previewWindow = openKOTPrintWindow(items);
+    if (!previewWindow) {
+        console.warn('Print preview opened inline (popup was blocked).');
+    }
     disableButtons(false);
 }
 
@@ -594,21 +550,34 @@ function printBill() {
 
     // Save transaction regardless of printer availability
     try {
-        const salesKey = 'sales_summary';
-        const existing = localStorage.getItem(salesKey);
-        const sales = existing ? JSON.parse(existing) : [];
         const txn = {
             table: seatNumber || 'Unknown',
             timestamp: new Date().toISOString(),
             items: Array.isArray(window._currentPrintItems) ? window._currentPrintItems.slice() : [],
             total: total
         };
+
         if (txn.items && txn.items.length > 0) {
+            // 1. Save to local storage for fallback / redundancy
+            const salesKey = 'sales_summary';
+            const existing = localStorage.getItem(salesKey);
+            const sales = existing ? JSON.parse(existing) : [];
             sales.push(txn);
             localStorage.setItem(salesKey, JSON.stringify(sales));
-            console.log('Transaction saved to sales_summary', txn);
-        } else {
-            console.log('No items to save for transaction');
+
+            // 2. Save to Express server file
+            const apiBase = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+                ? window.location.origin
+                : 'http://localhost:3000';
+            fetch(`${apiBase}/api/sales`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(txn)
+            }).then(res => {
+                if (res.ok) console.log('Transaction saved to server file successfully.');
+            }).catch(err => {
+                console.warn('Backend server not running; transaction saved locally only.');
+            });
         }
         window._currentPrintItems = [];
     } catch (e) {
@@ -635,6 +604,62 @@ function printBill() {
         console.warn('Print preview opened inline (popup was blocked).');
     }
 
+    // Automatically clear and reset the cart for the next order
+    Object.keys(cart).forEach(item => delete cart[item]);
+    saveCartToStorage();
+    updateCart();
+
     disableButtons(false);
 }
 
+// Move Table transfer logic
+function moveTable() {
+    const currentSeat = seatNumber || 'Unknown';
+    let targetInput = prompt(`Move all ordered items from ${currentSeat} to another table. Enter target table number (e.g. 4):`);
+    if (!targetInput) return; // User cancelled
+    
+    targetInput = targetInput.trim();
+    if (!targetInput) return;
+    
+    // Normalize to "Seat X"
+    let targetSeat = targetInput;
+    if (/^\d+$/.test(targetInput)) {
+        targetSeat = `Seat ${targetInput}`;
+    }
+    
+    if (targetSeat === currentSeat) {
+        alert("Target table must be different from current table!");
+        return;
+    }
+    
+    if (!confirm(`Are you sure you want to move all items from ${currentSeat} to ${targetSeat}?`)) {
+        return;
+    }
+    
+    // 1. Load target seat's existing cart from localStorage (if any)
+    const targetKey = `icecream_cart_${targetSeat}`;
+    const rawTarget = localStorage.getItem(targetKey);
+    let targetCart = {};
+    if (rawTarget) {
+        try { targetCart = JSON.parse(rawTarget); } catch(e) {}
+    }
+    
+    // 2. Merge current cart items into target cart
+    for (let item in cart) {
+        targetCart[item] = (targetCart[item] || 0) + cart[item];
+    }
+    
+    // 3. Save target cart to storage
+    localStorage.setItem(targetKey, JSON.stringify(targetCart));
+    
+    // 4. Clear current cart
+    Object.keys(cart).forEach(item => delete cart[item]);
+    saveCartToStorage();
+    
+    alert(`Successfully moved items to ${targetSeat}! Redirecting to ${targetSeat}...`);
+    
+    // 5. Redirect browser to itemsList.html for the new seat
+    const url = new URL(window.location.href);
+    url.searchParams.set('seat', targetSeat);
+    window.location.href = url.toString();
+}
