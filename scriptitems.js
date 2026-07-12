@@ -566,7 +566,7 @@ function printBill() {
             localStorage.setItem(salesKey, JSON.stringify(sales));
 
             // 2. Save to Express server file
-            const apiBase = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+            const apiBase = window.location.origin && window.location.origin.startsWith('http')
                 ? window.location.origin
                 : 'http://localhost:3000';
             fetch(`${apiBase}/api/sales`, {

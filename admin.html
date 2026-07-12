@@ -890,7 +890,7 @@
         })();
 
         // Server check & API endpoints configuration
-        const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+        const API_BASE = window.location.origin && window.location.origin.startsWith('http')
             ? window.location.origin
             : 'http://localhost:3000';
 

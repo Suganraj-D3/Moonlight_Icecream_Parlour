@@ -3,5 +3,9 @@ const salesEndingsData = [
   {
     "timestamp": 1783873323979,
     "total": 610
+  },
+  {
+    "timestamp": 1783874147622,
+    "total": 1180
   }
 ];
