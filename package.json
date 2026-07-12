@@ -2,7 +2,7 @@
   "name": "moonlight_icecream_parlour",
   "version": "1.0.0",
   "description": "\"# Moonlight_Billing_System\" \r \"# Moonlight_Icecream_Parlour\"",
-  "main": "scriptitems.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
