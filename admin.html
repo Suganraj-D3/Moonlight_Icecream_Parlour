@@ -867,8 +867,6 @@
     </div>
 
     <script src="menu.js"></script>
-    <script src="sales_summary.js"></script>
-    <script src="sales_endings.js"></script>
     <script>
         // Shared drawer toggle logic
         (function () {
@@ -1038,20 +1036,7 @@
                     console.error('Error fetching sales from server:', e);
                 }
             }
-            
-            if (!loaded) {
-                if (typeof salesSummaryData !== 'undefined') {
-                    arr = JSON.parse(JSON.stringify(salesSummaryData));
-                    loaded = true;
-                }
-            }
-            
-            if (!loaded) {
-                const raw = localStorage.getItem('sales_summary');
-                if (raw) {
-                    try { arr = JSON.parse(raw); } catch (e) { arr = []; }
-                }
-            }
+            // No local file or local storage fallback. Only trust server response.
             
             container.innerHTML = '';
             if (!arr || !arr.length) {
@@ -1087,20 +1072,6 @@
         async function deleteTransaction(timestamp) {
             if (!confirm('Are you sure you want to delete this specific transaction? This cannot be undone.')) return;
             
-            // 1. Delete from local storage fallback
-            try {
-                const salesKey = 'sales_summary';
-                const raw = localStorage.getItem(salesKey);
-                if (raw) {
-                    const sales = JSON.parse(raw);
-                    const filtered = sales.filter(txn => String(txn.timestamp) !== String(timestamp));
-                    localStorage.setItem(salesKey, JSON.stringify(filtered));
-                }
-            } catch (e) {
-                console.error('Failed to delete locally', e);
-            }
-
-            // 2. Delete from server
             if (isOnline) {
                 try {
                     const res = await fetch(`${API_BASE}/api/sales/delete`, {
@@ -1118,7 +1089,7 @@
                     showToast('Connection error', 'error');
                 }
             } else {
-                showToast('Deleted locally (offline)');
+                showToast('Offline: Cannot delete transaction', 'error');
             }
 
             loadSalesSummary();
@@ -1143,20 +1114,7 @@
                     console.error('Error fetching sales endings from server:', e);
                 }
             }
-            
-            if (!loaded) {
-                if (typeof salesEndingsData !== 'undefined') {
-                    arr = JSON.parse(JSON.stringify(salesEndingsData));
-                    loaded = true;
-                }
-            }
-            
-            if (!loaded) {
-                const raw = localStorage.getItem('sales_endings');
-                if (raw) {
-                    try { arr = JSON.parse(raw); } catch (e) { arr = []; }
-                }
-            }
+            // No local file or local storage fallback. Only trust server response.
             
             tbody.innerHTML = '';
             if (!arr || !arr.length) {
@@ -1236,19 +1194,7 @@
                 }
             }
 
-            if (!loaded) {
-                if (typeof salesSummaryData !== 'undefined') {
-                    arr = JSON.parse(JSON.stringify(salesSummaryData));
-                    loaded = true;
-                }
-            }
-
-            if (!loaded) {
-                const raw = localStorage.getItem('sales_summary');
-                if (raw) {
-                    try { arr = JSON.parse(raw); } catch (e) { arr = []; }
-                }
-            }
+            // No local file or local storage fallback. Only trust server response.
 
             const dataMap = {};
             arr.forEach(txn => {
@@ -1350,32 +1296,36 @@
         // Wire clear / end actions
         document.getElementById('clearSalesBtn').addEventListener('click', async () => {
             if (!confirm('Are you sure you want to clear all active sales summary records? This cannot be undone.')) return;
-            localStorage.removeItem('sales_summary');
             
             if (isOnline) {
                 try {
                     await fetch(`${API_BASE}/api/sales/clear`, { method: 'POST' });
+                    showToast('Sales summary cleared successfully!');
                 } catch (e) {
                     console.error('Failed to clear sales on server.');
+                    showToast('Failed to clear sales from server', 'error');
                 }
+            } else {
+                showToast('Offline: Cannot clear sales', 'error');
             }
             loadSalesSummary();
-            showToast('Sales summary cleared successfully!');
         });
 
         document.getElementById('clearHistoryBtn').addEventListener('click', async () => {
             if (!confirm('Are you sure you want to delete all saved end-of-sales history recordings? This cannot be undone.')) return;
-            localStorage.removeItem('sales_endings');
             
             if (isOnline) {
                 try {
                     await fetch(`${API_BASE}/api/sales/end/clear`, { method: 'POST' });
+                    showToast('Sales history archives cleared successfully!');
                 } catch (e) {
                     console.error('Failed to clear endings on server.');
+                    showToast('Failed to clear sales history from server', 'error');
                 }
+            } else {
+                showToast('Offline: Cannot clear history', 'error');
             }
             loadSalesHistory();
-            showToast('Sales history archives cleared successfully!');
         });
 
         document.getElementById('endSalesBtn').addEventListener('click', async () => {
@@ -1384,18 +1334,6 @@
             const total = (typeof window.currentGrandTotal === 'number') ? window.currentGrandTotal : 0;
             const record = { timestamp: Date.now(), total: Number(total) };
             
-            // 1. Save locally
-            try {
-                const key = 'sales_endings';
-                let existing = JSON.parse(localStorage.getItem(key) || '[]');
-                existing.push(record);
-                localStorage.setItem(key, JSON.stringify(existing));
-                localStorage.removeItem('sales_summary');
-            } catch (e) {
-                console.error('Local ending recording error:', e);
-            }
-            
-            // 2. Save on server
             if (isOnline) {
                 try {
                     await fetch(`${API_BASE}/api/sales/end`, {
@@ -1404,13 +1342,15 @@
                         body: JSON.stringify(record)
                     });
                     await fetch(`${API_BASE}/api/sales/clear`, { method: 'POST' });
+                    showToast('Sales closed and recorded to history!');
+                    switchTab('history');
                 } catch (e) {
                     console.error('Server ending recording error:', e);
+                    showToast('Failed to end sales on server', 'error');
                 }
+            } else {
+                showToast('Offline: Cannot close sales', 'error');
             }
-            
-            showToast('Sales closed and recorded to history!');
-            switchTab('history');
         });
 
         // Excel/CSV Export utilities
@@ -1487,40 +1427,22 @@
 
         async function fetchSalesSummaryArray() {
             let arr = [];
-            let loaded = false;
             if (isOnline) {
                 try {
                     const res = await fetch(`${API_BASE}/api/sales`);
-                    if (res.ok) { arr = await res.json(); loaded = true; }
+                    if (res.ok) { arr = await res.json(); }
                 } catch(e) {}
-            }
-            if (!loaded && typeof salesSummaryData !== 'undefined') {
-                arr = JSON.parse(JSON.stringify(salesSummaryData));
-                loaded = true;
-            }
-            if (!loaded) {
-                const raw = localStorage.getItem('sales_summary');
-                if (raw) { try { arr = JSON.parse(raw); } catch(e) {} }
             }
             return arr;
         }
 
         async function fetchSalesHistoryArray() {
             let arr = [];
-            let loaded = false;
             if (isOnline) {
                 try {
                     const res = await fetch(`${API_BASE}/api/sales/end`);
-                    if (res.ok) { arr = await res.json(); loaded = true; }
+                    if (res.ok) { arr = await res.json(); }
                 } catch(e) {}
-            }
-            if (!loaded && typeof salesEndingsData !== 'undefined') {
-                arr = JSON.parse(JSON.stringify(salesEndingsData));
-                loaded = true;
-            }
-            if (!loaded) {
-                const raw = localStorage.getItem('sales_endings');
-                if (raw) { try { arr = JSON.parse(raw); } catch(e) {} }
             }
             return arr;
         }

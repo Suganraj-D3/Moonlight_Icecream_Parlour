@@ -558,14 +558,7 @@ function printBill() {
         };
 
         if (txn.items && txn.items.length > 0) {
-            // 1. Save to local storage for fallback / redundancy
-            const salesKey = 'sales_summary';
-            const existing = localStorage.getItem(salesKey);
-            const sales = existing ? JSON.parse(existing) : [];
-            sales.push(txn);
-            localStorage.setItem(salesKey, JSON.stringify(sales));
-
-            // 2. Save to Express server file
+            // Save to Express server / database
             const apiBase = window.location.origin && window.location.origin.startsWith('http')
                 ? window.location.origin
                 : 'http://localhost:3000';
@@ -574,9 +567,9 @@ function printBill() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(txn)
             }).then(res => {
-                if (res.ok) console.log('Transaction saved to server file successfully.');
+                if (res.ok) console.log('Transaction saved to server successfully.');
             }).catch(err => {
-                console.warn('Backend server not running; transaction saved locally only.');
+                console.warn('Backend server connection error; transaction failed to save.');
             });
         }
         window._currentPrintItems = [];
