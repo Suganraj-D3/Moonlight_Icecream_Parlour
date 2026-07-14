@@ -1,31 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/menu.js",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/sales_summary.js",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/sales_endings.js",
-      "dest": "api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" },
+    { "source": "/menu.js", "destination": "/api/index.js" },
+    { "source": "/sales_summary.js", "destination": "/api/index.js" },
+    { "source": "/sales_endings.js", "destination": "/api/index.js" }
   ]
 }
